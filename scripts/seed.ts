@@ -6,8 +6,10 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hostin
 // Models
 interface IService {
   name: string;
+  slug: string;
   description: string;
   icon?: string;
+  order?: number;
 }
 
 interface IPlan {
@@ -71,28 +73,28 @@ async function seed() {
     const services: IService[] = [
       {
         name: 'Web Hosting',
-        slug: 'web-hosting',
+        slug: generateSlug('Web Hosting'),
         description: 'Fast & reliable web hosting for websites and blogs',
         icon: '🌐',
         order: 0,
       },
       {
         name: 'Cloud Servers',
-        slug: 'cloud-servers',
+        slug: generateSlug('Cloud Servers'),
         description: 'Scalable cloud infrastructure with automatic backups',
         icon: '☁️',
         order: 1,
       },
       {
         name: 'VPS',
-        slug: 'vps',
+        slug: generateSlug('VPS'),
         description: 'Virtual private servers with root access',
         icon: '🖥️',
         order: 2,
       },
       {
         name: 'Dedicated Servers',
-        slug: 'dedicated-servers',
+        slug: generateSlug('Dedicated Servers'),
         description: 'High performance dedicated servers for demanding applications',
         icon: '⚡',
         order: 3,
