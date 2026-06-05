@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/auth';
+import { JwtPayload } from 'jsonwebtoken';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify the token
-    const decoded = await verifyToken(token);
+    const decoded = await verifyToken(token) as JwtPayload;
 
     if (!decoded) {
       return NextResponse.json(

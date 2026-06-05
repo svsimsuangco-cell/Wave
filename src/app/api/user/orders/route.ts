@@ -3,6 +3,7 @@ import dbConnect from '@/lib/mongodb';
 import Order from '@/models/Order';
 import Plan from '@/models/Plan';
 import { verifyToken } from '@/lib/auth';
+import { JwtPayload } from 'jsonwebtoken';
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const decoded = await verifyToken(token);
+    const decoded = await verifyToken(token) as JwtPayload;
     if (!decoded) {
       return NextResponse.json(
         { success: false, error: 'Invalid token' },

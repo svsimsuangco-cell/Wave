@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { JwtPayload } from 'jsonwebtoken';
 import dbConnect from '@/lib/mongodb';
 import Plan from '@/models/Plan';
 import Order from '@/models/Order';
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const decoded = await verifyToken(token);
+    const decoded = await verifyToken(token) as JwtPayload;
     if (!decoded) {
       return NextResponse.json(
         { success: false, error: 'Invalid token' },

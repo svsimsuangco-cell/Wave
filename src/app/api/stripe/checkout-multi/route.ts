@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { JwtPayload } from 'jsonwebtoken';
 import dbConnect from '@/lib/mongodb';
 import Plan from '@/models/Plan';
 import Order from '@/models/Order';
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const decoded = await verifyToken(token);
+    const decoded = await verifyToken(token) as JwtPayload;
     if (!decoded) {
       return NextResponse.json(
         { success: false, error: 'Invalid token' },
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch all plans and create line items
-    const lineItems = [];
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
     let totalPrice = 0;
     const orderItems = [];
 
@@ -77,7 +78,7 @@ export async function POST(request: NextRequest) {
           },
           unit_amount: price,
           recurring: {
-            interval: billingPeriod === 'yearly' ? 'year' : 'month',
+            interval: (billingPeriod === 'yearly' ? 'year' : 'month') as any,
           },
         },
         quantity: item.quantity || 1,
