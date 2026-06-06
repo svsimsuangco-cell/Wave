@@ -115,6 +115,7 @@ export default function Dashboard() {
                     <th className="px-4 py-2 text-left text-gray-300">Amount</th>
                     <th className="px-4 py-2 text-left text-gray-300">Status</th>
                     <th className="px-4 py-2 text-left text-gray-300">Date</th>
+                    <th className="px-4 py-2 text-left text-gray-300">Invoice</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -142,6 +143,14 @@ export default function Dashboard() {
                       </td>
                       <td className="px-4 py-3 text-gray-400 text-sm">
                         {new Date(order.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3">
+                        <Link
+                          href={`/dashboard/invoices/${order._id}`}
+                          className="text-blue-400 hover:text-blue-300 text-sm font-medium underline underline-offset-2"
+                        >
+                          View
+                        </Link>
                       </td>
                     </tr>
                   ))}
