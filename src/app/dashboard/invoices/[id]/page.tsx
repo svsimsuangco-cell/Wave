@@ -69,7 +69,7 @@ export default function InvoicePage() {
     fetchOrder();
   }, [id, router]);
 
-  if (loading) {
+  if (loading || !id) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <p className="text-gray-400 text-lg">Loading invoice...</p>
@@ -87,6 +87,8 @@ export default function InvoicePage() {
       </div>
     );
   }
+
+  const billing = order.billingInfo || {};
 
   const statusLabel = order.status.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   const statusStyle = STATUS_STYLES[order.status] || 'bg-gray-500/20 text-gray-400';
@@ -141,13 +143,13 @@ export default function InvoicePage() {
           <div className="mb-8">
             <h2 className="text-gray-400 print:text-gray-500 text-xs uppercase tracking-wide mb-2">Billed To</h2>
             <div className="text-white print:text-black">
-              <p className="font-semibold">{order.billingInfo.firstName} {order.billingInfo.lastName}</p>
-              <p className="text-gray-300 print:text-gray-600 text-sm">{order.billingInfo.email}</p>
-              <p className="text-gray-300 print:text-gray-600 text-sm">{order.billingInfo.address}</p>
+              <p className="font-semibold">{billing.firstName} {billing.lastName}</p>
+              <p className="text-gray-300 print:text-gray-600 text-sm">{billing.email}</p>
+              <p className="text-gray-300 print:text-gray-600 text-sm">{billing.address}</p>
               <p className="text-gray-300 print:text-gray-600 text-sm">
-                {order.billingInfo.city}, {order.billingInfo.postalCode}
+                {billing.city}{billing.postalCode ? `, ${billing.postalCode}` : ''}
               </p>
-              <p className="text-gray-300 print:text-gray-600 text-sm">{order.billingInfo.country}</p>
+              <p className="text-gray-300 print:text-gray-600 text-sm">{billing.country}</p>
             </div>
           </div>
 
