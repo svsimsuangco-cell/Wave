@@ -40,7 +40,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* <div>
+           <div>
             <h4 className="text-white font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
               <li>
@@ -59,7 +59,7 @@ export default function Footer() {
                 </Link>
               </li>
             </ul>
-          </div> */}
+          </div>
 
           <div>
             <h4 className="text-white font-semibold mb-4">Contact</h4>
