@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: "Professional web hosting, cloud servers, dedicated servers, and VPS solutions",
   icons: {
     icon: "/logo.png",
-    shortcut: "/favicon.ico",
+    shortcut: "/logo.png",
     apple: "/logo.png",
   },
 };
