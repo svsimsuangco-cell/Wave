@@ -10,7 +10,11 @@ export interface IOrder extends Document {
   }>;
   totalPrice: number;
   status: 'pending' | 'completed' | 'failed' | 'cancelled';
+  paymentMethod: 'stripe' | 'paypal';
   stripePaymentIntentId?: string;
+  stripeSessionId?: string;
+  paypalOrderId?: string;
+  paypalPayerId?: string;
   billingInfo: {
     email: string;
     firstName: string;
@@ -51,7 +55,15 @@ const orderSchema = new Schema<IOrder>(
       enum: ['pending', 'completed', 'failed', 'cancelled'],
       default: 'pending',
     },
+    paymentMethod: {
+      type: String,
+      enum: ['stripe', 'paypal'],
+      default: 'stripe',
+    },
     stripePaymentIntentId: String,
+    stripeSessionId: String,
+    paypalOrderId: String,
+    paypalPayerId: String,
     billingInfo: {
       email: String,
       firstName: String,

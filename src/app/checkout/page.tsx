@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -41,6 +41,8 @@ export default function Checkout() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'paypal'>('stripe');
+  const paypalContainerRef = useRef<HTMLDivElement>(null);
 
   // Check authentication and fetch data
   useEffect(() => {
@@ -102,6 +104,16 @@ export default function Checkout() {
     checkAuthAndFetchData();
   }, [router]);
 
+  // Load PayPal SDK when payment method is PayPal
+  useEffect(() => {
+    if (paymentMethod === 'paypal' && !window.paypal) {
+      const script = document.createElement('script');
+      script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}`;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, [paymentMethod]);
+
   const getPlanDetails = (planId: string) => {
     return plans.find(p => p._id === planId);
   };
@@ -137,22 +149,44 @@ export default function Checkout() {
     setMessage('');
 
     try {
-      const response = await fetch('/api/stripe/checkout-multi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          cartItems,
-          billingPeriod,
-        }),
-      });
+      if (paymentMethod === 'stripe') {
+        const response = await fetch('/api/stripe/checkout-multi', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            cartItems,
+            billingPeriod,
+          }),
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.ok && data.data?.url) {
-        window.location.href = data.data.url;
-      } else {
-        setMessage('Error: ' + (data.error || 'Failed to create checkout session'));
+        if (response.ok && data.data?.url) {
+          window.location.href = data.data.url;
+        } else {
+          setMessage('Error: ' + (data.error || 'Failed to create checkout session'));
+        }
+      } else if (paymentMethod === 'paypal') {
+        const response = await fetch('/api/paypal/checkout-multi', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            cartItems,
+            billingPeriod,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.data?.approvalUrl) {
+          // Store the database order ID for later use
+          sessionStorage.setItem('pendingOrderId', data.data.dbOrderId);
+          window.location.href = data.data.approvalUrl;
+        } else {
+          setMessage('Error: ' + (data.error || 'Failed to create PayPal order'));
+        }
       }
     } catch (error) {
       setMessage('Error: ' + (error as Error).message);
@@ -290,6 +324,33 @@ export default function Checkout() {
                 </div>
               </div>
 
+              {/* Payment Method Selection */}
+              <div className="mb-6">
+                <label className="block text-gray-300 mb-3 font-semibold">Payment Method</label>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setPaymentMethod('stripe')}
+                    className={`flex-1 py-3 px-4 rounded-lg transition font-semibold ${
+                      paymentMethod === 'stripe'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                    }`}
+                  >
+                    💳 Stripe
+                  </button>
+                  <button
+                    onClick={() => setPaymentMethod('paypal')}
+                    className={`flex-1 py-3 px-4 rounded-lg transition font-semibold ${
+                      paymentMethod === 'paypal'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                    }`}
+                  >
+                    🅿️ PayPal
+                  </button>
+                </div>
+              </div>
+
               <button
                 onClick={handleCheckout}
                 disabled={checkoutLoading}
@@ -300,7 +361,10 @@ export default function Checkout() {
 
               <div className="flex items-center gap-2 text-xs text-gray-400">
                 <span>🔒</span>
-                <span>Payments processed securely by Stripe</span>
+                <span>
+                  Payments processed securely by{' '}
+                  {paymentMethod === 'stripe' ? 'Stripe' : 'PayPal'}
+                </span>
               </div>
 
               <Link
