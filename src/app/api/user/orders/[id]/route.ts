@@ -7,7 +7,7 @@ import { JwtPayload } from 'jsonwebtoken';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
@@ -22,7 +22,8 @@ export async function GET(
       return NextResponse.json({ success: false, error: 'Invalid token' }, { status: 401 });
     }
 
-    const order = await Order.findOne({ _id: params.id, userId: decoded.userId }).lean() as any;
+    const { id } = await params;
+    const order = await Order.findOne({ _id: id, userId: decoded.userId }).lean() as any;
     if (!order) {
       return NextResponse.json({ success: false, error: 'Order not found' }, { status: 404 });
     }
