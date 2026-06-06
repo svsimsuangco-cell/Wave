@@ -18,7 +18,10 @@ export const metadata: Metadata = {
   title: "Wave - Webhosting Services",
   description: "Professional web hosting, cloud servers, dedicated servers, and VPS solutions",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { rel: "icon", url: "/favicon.ico", sizes: "any" },
+      { rel: "apple-touch-icon", url: "/logo.png" },
+    ],
   },
 };
 
