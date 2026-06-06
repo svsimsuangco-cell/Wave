@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect, use } from 'react';
 
 interface OrderItem {
   planId: string;
@@ -39,9 +39,9 @@ const STATUS_STYLES: Record<string, string> = {
   cancelled: 'bg-red-500/20 text-red-400',
 };
 
-export default function InvoicePage() {
+export default function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const router = useRouter();
-  const params = useParams();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -49,7 +49,7 @@ export default function InvoicePage() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const res = await fetch(`/api/user/orders/${params.id}`, { credentials: 'include' });
+        const res = await fetch(`/api/user/orders/${id}`, { credentials: 'include' });
         if (!res.ok) {
           if (res.status === 401) { router.push('/auth/login?redirect=/dashboard'); return; }
           setError('Invoice not found.');
@@ -64,7 +64,7 @@ export default function InvoicePage() {
       }
     };
     fetchOrder();
-  }, [params.id, router]);
+  }, [id, router]);
 
   if (loading) {
     return (
