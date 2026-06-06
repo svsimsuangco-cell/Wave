@@ -8,13 +8,13 @@ export async function DELETE(request: NextRequest) {
   try {
     await dbConnect();
 
-    const token = request.cookies.get('adminAuth')?.value;
+    const token = request.cookies.get('admin_auth')?.value;
     if (!token) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
     const decoded = await verifyToken(token) as JwtPayload;
-    if (!decoded || !decoded.isAdmin) {
+    if (!decoded) {
       return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
     }
 
