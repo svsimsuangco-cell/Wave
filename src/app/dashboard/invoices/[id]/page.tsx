@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState, useEffect, use } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 interface OrderItem {
   planId: string;
@@ -39,14 +39,17 @@ const STATUS_STYLES: Record<string, string> = {
   cancelled: 'bg-red-500/20 text-red-400',
 };
 
-export default function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function InvoicePage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params?.id as string;
+
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (!id) return;
     const fetchOrder = async () => {
       try {
         const res = await fetch(`/api/user/orders/${id}`, { credentials: 'include' });
@@ -91,7 +94,6 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
       <div className="max-w-3xl mx-auto">
-        {/* Toolbar */}
         <div className="flex items-center justify-between mb-6 print:hidden">
           <Link href="/dashboard" className="text-blue-400 hover:underline text-sm">
             ← Back to Dashboard
@@ -104,10 +106,8 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
           </button>
         </div>
 
-        {/* Invoice card */}
         <div className="bg-slate-800 border border-slate-700 rounded-2xl p-8 print:bg-white print:border-gray-200 print:text-black">
 
-          {/* Header */}
           <div className="flex items-start justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold text-white print:text-black">INVOICE</h1>
@@ -119,7 +119,6 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
             </div>
           </div>
 
-          {/* Status & Date */}
           <div className="flex flex-wrap gap-4 mb-8">
             <div className="bg-slate-700/50 print:bg-gray-100 rounded-lg px-4 py-3 flex-1 min-w-[140px]">
               <p className="text-gray-400 print:text-gray-500 text-xs uppercase tracking-wide mb-1">Status</p>
@@ -139,7 +138,6 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
             </div>
           </div>
 
-          {/* Billing Info */}
           <div className="mb-8">
             <h2 className="text-gray-400 print:text-gray-500 text-xs uppercase tracking-wide mb-2">Billed To</h2>
             <div className="text-white print:text-black">
@@ -153,7 +151,6 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
             </div>
           </div>
 
-          {/* Items table */}
           <div className="mb-8">
             <table className="w-full">
               <thead>
@@ -184,7 +181,6 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
             </table>
           </div>
 
-          {/* Total */}
           <div className="flex justify-end mb-8">
             <div className="w-64">
               <div className="flex justify-between py-2 border-t border-slate-600 print:border-gray-300">
@@ -198,7 +194,6 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
             </div>
           </div>
 
-          {/* Footer */}
           <div className="border-t border-slate-700 print:border-gray-200 pt-6 text-center">
             <p className="text-gray-400 print:text-gray-500 text-sm">Thank you for your business!</p>
             <p className="text-gray-500 print:text-gray-400 text-xs mt-1">For questions, contact support@wave.com</p>
