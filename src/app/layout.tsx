@@ -15,8 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HostingHub - Web & Cloud Hosting Services",
-  description: "Reliable hosting solutions with VPS, Cloud Servers, Dedicated Servers, and Web Hosting",
+  title: "Wave - Webhosting Services",
+  description: "Professional web hosting, cloud servers, dedicated servers, and VPS solutions",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
