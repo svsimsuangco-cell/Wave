@@ -10,6 +10,11 @@ interface OrderItem {
   planDescription: string;
   quantity: number;
   price: number;
+  vCPU: number | null;
+  RAM: number | null;
+  storage: number | null;
+  bandwidth: string | null;
+  features: string[];
 }
 
 interface Order {
@@ -170,6 +175,37 @@ export default function InvoicePage() {
                       <p className="text-white print:text-black font-medium">{item.planName}</p>
                       {item.planDescription && (
                         <p className="text-gray-400 print:text-gray-500 text-xs mt-0.5">{item.planDescription}</p>
+                      )}
+                      <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
+                        {item.vCPU != null && (
+                          <span className="text-xs text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">
+                            {item.vCPU} vCPU
+                          </span>
+                        )}
+                        {item.RAM != null && (
+                          <span className="text-xs text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">
+                            {item.RAM} GB RAM
+                          </span>
+                        )}
+                        {item.storage != null && (
+                          <span className="text-xs text-green-400 bg-green-500/10 px-2 py-0.5 rounded">
+                            {item.storage} GB Storage
+                          </span>
+                        )}
+                        {item.bandwidth && (
+                          <span className="text-xs text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded">
+                            {item.bandwidth} Bandwidth
+                          </span>
+                        )}
+                      </div>
+                      {item.features && item.features.length > 0 && (
+                        <ul className="mt-2 space-y-0.5">
+                          {item.features.map((f, fi) => (
+                            <li key={fi} className="text-xs text-gray-400 print:text-gray-500 flex items-center gap-1">
+                              <span className="text-green-400">✓</span> {f}
+                            </li>
+                          ))}
+                        </ul>
                       )}
                     </td>
                     <td className="py-3 text-center text-gray-300 print:text-gray-600">{item.quantity}</td>

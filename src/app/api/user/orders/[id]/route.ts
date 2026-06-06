@@ -35,6 +35,11 @@ export async function GET(
           ...item,
           planName: plan?.name || 'Unknown Plan',
           planDescription: plan?.description || '',
+          vCPU: plan?.vCPU ?? null,
+          RAM: plan?.RAM ?? null,
+          storage: plan?.storage ?? null,
+          bandwidth: plan?.bandwidth ?? null,
+          features: plan?.features ?? [],
         };
       })
     );
