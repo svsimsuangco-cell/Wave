@@ -40,7 +40,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          {/* <div>
             <h4 className="text-white font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
               <li>
@@ -59,18 +59,18 @@ export default function Footer() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           <div>
             <h4 className="text-white font-semibold mb-4">Contact</h4>
-            <p className="text-gray-400 mb-2">support@hostinghub.com</p>
+            <p className="text-gray-400 mb-2">support@Wave.com</p>
             <p className="text-gray-400">+1 (555) 123-4567</p>
           </div>
         </div>
 
         <div className="border-t border-slate-700 pt-8">
           <p className="text-gray-400 text-center">
-            &copy; 2026 HostingHub. All rights reserved.
+            &copy; 2026 Wave. All rights reserved.
           </p>
         </div>
       </div>
