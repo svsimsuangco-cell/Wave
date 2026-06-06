@@ -128,25 +128,27 @@ export default function Header() {
               )}
             </Link>
 
-            {isAuthenticated ? (
-              <div className="flex items-center space-x-4">
-                <Link 
-                  href="/dashboard"
-                  className="text-blue-400 hover:text-blue-300 transition text-sm font-semibold"
-                >
-                  {displayName}
+            {!loading && !pathname.startsWith('/auth') && (
+              isAuthenticated ? (
+                <div className="flex items-center space-x-4">
+                  <Link
+                    href="/dashboard"
+                    className="text-blue-400 hover:text-blue-300 transition text-sm font-semibold"
+                  >
+                    {displayName}
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link href="/auth/login" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">
+                  Login
                 </Link>
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <Link href="/auth/login" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">
-                Login
-              </Link>
+              )
             )}
           </div>
 
@@ -180,25 +182,27 @@ export default function Header() {
               )}
             </Link>
 
-            {isAuthenticated ? (
-              <div className="space-y-2">
-                <Link 
-                  href="/dashboard"
-                  className="block text-blue-400 hover:text-blue-300 py-2 font-semibold"
-                >
-                  {displayName}
+            {!loading && !pathname.startsWith('/auth') && (
+              isAuthenticated ? (
+                <div className="space-y-2">
+                  <Link
+                    href="/dashboard"
+                    className="block text-blue-400 hover:text-blue-300 py-2 font-semibold"
+                  >
+                    {displayName}
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link href="/auth/login" className="block text-gray-300 hover:text-white py-2">
+                  Login
                 </Link>
-                <button
-                  onClick={handleLogout}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <Link href="/auth/login" className="block text-gray-300 hover:text-white py-2">
-                Login
-              </Link>
+              )
             )}
           </div>
         )}
